@@ -773,11 +773,11 @@
                                 <div class="space-y-5 max-w-sm mx-auto">
                                     <div class="relative">
                                         <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5"></i>
-                                        <input type="text" required placeholder="Ваше Имя" class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition">
+                                        <input type="text" name="name" required placeholder="Ваше Имя" class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition">
                                     </div>
                                     <div class="relative">
                                         <i data-lucide="smartphone" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5"></i>
-                                        <input type="tel" required placeholder="Телефон / WhatsApp" class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition">
+                                        <input type="tel" name="phone" required placeholder="Телефон / WhatsApp" class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition">
                                     </div>
                                     <button type="submit" class="w-full px-6 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-xl font-bold hover:from-indigo-500 hover:to-indigo-400 transition shadow-[0_0_20px_rgba(99,102,241,0.4)] transform hover:-translate-y-1">
                                         Получить смету
@@ -863,7 +863,7 @@
                 <a href="https://t.me/dimasic_135" target="_blank" class="flex items-center gap-2 px-6 py-3 bg-[#0088cc] text-white rounded-full font-bold hover:bg-[#0077b5] transition shadow-lg shadow-blue-500/20">
                     <i data-lucide="send" class="w-4 h-4"></i> Telegram
                 </a>
-                <a href="https://wa.me/dimasic_135" target="_blank" class="flex items-center gap-2 px-6 py-3 bg-[#25D366] text-white rounded-full font-bold hover:bg-[#20bd5a] transition shadow-lg shadow-green-500/20">
+                <a href="https://wa.me/78406991490" target="_blank" class="flex items-center gap-2 px-6 py-3 bg-[#25D366] text-white rounded-full font-bold hover:bg-[#20bd5a] transition shadow-lg shadow-green-500/20">
                     <i data-lucide="phone" class="w-4 h-4"></i> WhatsApp
                 </a>
             </div>
@@ -923,14 +923,87 @@
         }
 
         // Form Submission Logic
-        function submitForm(event) {
+        async function submitForm(event) {
             event.preventDefault();
-            // Here you would typically send the data to a server
-            alert("Спасибо! Ваша заявка принята. Мы свяжемся с вами в ближайшее время.");
             
-            // Reset form
-            event.target.reset();
-            nextStep(1); // Go back to step 1 or maybe show a success step
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            // Собираем все данные из формы
+            const niche = formData.get('niche');
+            const site = formData.get('site');
+            const time = formData.get('time');
+            const name = formData.get('name');
+            const phone = formData.get('phone');
+            
+            // Маппинг значений для читаемости
+            const nicheMap = {
+                'service': 'Услуги',
+                'ecommerce': 'Товарный бизнес',
+                'infobiz': 'Инфобизнес',
+                'b2b': 'B2B производство'
+            };
+            
+            const siteMap = {
+                'no': 'Нет, это мой первый запуск',
+                'yes_bad': 'Есть, но он не приносит заявок',
+                'yes_redesign': 'Есть, хочу сделать редизайн'
+            };
+            
+            const timeMap = {
+                'asap': 'Вчера (срочно)',
+                'month': 'В течение месяца',
+                'later': 'Просто прицениваюсь'
+            };
+            
+            // Формируем сообщение для Telegram
+            const message = `🎯 <b>Новая заявка с сайта!</b>
+
+👤 <b>Имя:</b> ${name}
+📱 <b>Телефон:</b> ${phone}
+
+📋 <b>Детали заявки:</b>
+• Ниша: ${nicheMap[niche] || niche}
+• Сайт: ${siteMap[site] || site}
+• Срок запуска: ${timeMap[time] || time}
+
+⏰ <b>Время:</b> ${new Date().toLocaleString('ru-RU')}`;
+            
+            // Telegram Bot API
+            const botToken = '8474291091:AAFdaVOqH0bbZx0ppvd_NQPqACzHKakOU5E';
+            const chatId = '8406991490';
+            const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+            
+            try {
+                // Отправляем данные в Telegram
+                const response = await fetch(telegramUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.ok) {
+                    // Показываем успешное сообщение
+                    alert("✅ Спасибо! Ваша заявка принята. Мы свяжемся с вами в ближайшее время.");
+                    
+                    // Reset form
+                    form.reset();
+                    nextStep(1);
+                } else {
+                    throw new Error('Ошибка отправки');
+                }
+            } catch (error) {
+                console.error('Ошибка отправки заявки:', error);
+                alert("Произошла ошибка при отправке заявки. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую через Telegram.");
+            }
         }
     </script>
 </body>
