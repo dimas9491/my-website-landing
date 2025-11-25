@@ -77,18 +77,6 @@
             z-index: -1;
             opacity: 0.6;
         }
-        /* Pseudo-3D Geometric Shapes */
-        .shape-cube {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, rgba(99,102,241,0.4), rgba(168,85,247,0.1));
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            backdrop-filter: blur(4px);
-            position: absolute;
-            border-radius: 12px;
-            z-index: 0;
-        }
         /* Slider Styles */
         .slider-container {
             position: relative;
@@ -184,10 +172,6 @@
         <div class="orb w-[600px] h-[600px] bg-purple-600 bottom-[-10%] right-[-5%] opacity-20"></div>
         <div class="orb w-[400px] h-[400px] bg-blue-500 top-[40%] left-[30%] opacity-10 filter blur-[100px]"></div>
 
-        <!-- Floating 3D/Geometric Shapes (Decorative) -->
-        <div class="shape-cube top-[15%] right-[10%] rotate-12 animate-float"></div>
-        <div class="shape-cube top-[60%] left-[5%] -rotate-12 w-10 h-10 animate-float-delayed bg-purple-500/20"></div>
-        
         <!-- Abstract Ring -->
         <div class="absolute top-[20%] right-[30%] w-64 h-64 border border-indigo-500/10 rounded-full animate-spin-slow pointer-events-none"></div>
     </div>
