@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Разработка продающих сайтов | Маркетинговая упаковка</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#1e293b', 
+                            900: '#0f172a',
+                            950: '#020617', /* Deeper black */
+                        },
+                        indigo: {
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            900: '#312e81',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 8s ease-in-out infinite 2s',
+                        'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 20s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-20px) rotate(5deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #020617;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        /* --- BACKGROUND EFFECTS --- */
+        .bg-grid {
+            background-size: 50px 50px;
+            background-image: linear-gradient(to right, rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .glass-nav {
+            background: rgba(2, 6, 23, 0.7);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        /* --- 3D DECORATIONS --- */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.6;
+        }
+        /* Pseudo-3D Geometric Shapes */
+        .shape-cube {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(99,102,241,0.4), rgba(168,85,247,0.1));
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            backdrop-filter: blur(4px);
+            position: absolute;
+            border-radius: 12px;
+            z-index: 0;
+        }
+        /* Slider Styles */
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .slider-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .slider-resizer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 50%;
+            background-color: #0f172a; 
+            border-right: 2px solid #6366f1; 
+            overflow: hidden;
+            z-index: 10;
+        }
+        .slider-handle {
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: #6366f1; 
+            border-radius: 50%;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: col-resize;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        /* Mockup Contents */
+        .mockup-bad {
+            background: #cbd5e1;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            height: 100%;
+            font-family: 'Times New Roman', serif;
+            color: #0f172a;
+        }
+        .mockup-good {
+            background: linear-gradient(to bottom right, #1e1b4b, #312e81);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            height: 100%;
+            color: white;
+        }
+        
+        /* Quiz Steps */
+        .step { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .step.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .glow-text {
+            text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Mobile Menu */
+        #mobile-menu {
+            display: none;
+        }
+        #mobile-menu.open {
+            display: block;
+        }
+    </style>
+</head>
+<body class="selection:bg-indigo-500 selection:text-white">
+
+    <!-- GLOBAL BACKGROUND ELEMENTS -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-[-1]">
+        <!-- Grid Pattern -->
+        <div class="absolute inset-0 bg-grid opacity-30"></div>
+        
+        <!-- Large Gradient Orbs -->
+        <div class="orb w-[800px] h-[800px] bg-indigo-600 top-[-20%] left-[-10%] opacity-20 animate-pulse-slow"></div>
+        <div class="orb w-[600px] h-[600px] bg-purple-600 bottom-[-10%] right-[-5%] opacity-20"></div>
+        <div class="orb w-[400px] h-[400px] bg-blue-500 top-[40%] left-[30%] opacity-10 filter blur-[100px]"></div>
+
+        <!-- Floating 3D/Geometric Shapes (Decorative) -->
+        <div class="shape-cube top-[15%] right-[10%] rotate-12 animate-float"></div>
+        <div class="shape-cube top-[60%] left-[5%] -rotate-12 w-10 h-10 animate-float-delayed bg-purple-500/20"></div>
+        
+        <!-- Abstract Ring -->
+        <div class="absolute top-[20%] right-[30%] w-64 h-64 border border-indigo-500/10 rounded-full animate-spin-slow pointer-events-none"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center gap-3">
+                    <div class="w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/30">W</div>
+                    <span class="font-bold text-xl tracking-tight text-white">WebExpert</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#problems" class="text-slate-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition font-medium text-sm">Проблемы</a>
+                    <a href="#solution" class="text-slate-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition font-medium text-sm">Решение</a>
+                    <a href="#portfolio" class="text-slate-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition font-medium text-sm">Портфолио</a>
+                    <a href="#pricing" class="text-slate-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition font-medium text-sm">Тарифы</a>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <a href="#quiz" class="hidden md:inline-flex items-center justify-center px-6 py-2.5 border border-indigo-500/50 text-sm font-semibold rounded-full text-white bg-indigo-600/20 hover:bg-indigo-600 hover:border-indigo-600 transition shadow-lg shadow-indigo-500/20 backdrop-blur-sm group">
+                        Обсудить проект
+                        <i data-lucide="arrow-up-right" class="ml-2 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+                    </a>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="md:hidden text-white p-2 rounded-lg hover:bg-white/10 transition">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="md:hidden absolute top-20 left-0 w-full bg-slate-900/95 backdrop-blur-xl border-b border-white/5 shadow-xl">
+            <div class="px-4 py-6 space-y-4">
+                <a href="#problems" class="block text-slate-300 hover:text-white hover:bg-white/5 px-4 py-3 rounded-lg transition font-medium text-lg">Проблемы</a>
+                <a href="#solution" class="block text-slate-300 hover:text-white hover:bg-white/5 px-4 py-3 rounded-lg transition font-medium text-lg">Решение</a>
+                <a href="#portfolio" class="block text-slate-300 hover:text-white hover:bg-white/5 px-4 py-3 rounded-lg transition font-medium text-lg">Портфолио</a>
+                <a href="#pricing" class="block text-slate-300 hover:text-white hover:bg-white/5 px-4 py-3 rounded-lg transition font-medium text-lg">Тарифы</a>
+                <a href="#quiz" class="block text-center w-full px-6 py-3 border border-indigo-500/50 text-base font-semibold rounded-xl text-white bg-indigo-600/20 hover:bg-indigo-600 transition mt-4">
+                    Обсудить проект
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 lg:pt-48 lg:pb-32 relative overflow-visible">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                
+                <!-- Text Content -->
+                <div class="animate-float">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-8 backdrop-blur-md">
+                        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                        Маркетинг + Дизайн + Разработка
+                    </div>
+                    <h1 class="text-4xl md:text-5xl lg:text-7xl font-extrabold text-white leading-[1.1] mb-8">
+                        Перестаньте <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 glow-text">греть воздух</span>
+                        <br>бюджетом.
+                    </h1>
+                    <p class="text-lg md:text-xl text-slate-300 mb-10 leading-relaxed max-w-lg">
+                        Разработаю лендинг с конверсией <span class="text-white font-bold border-b border-indigo-500/50">от 5%</span>. Глубокий маркетинг вместо шаблонных картинок. Окупаемость с первой недели.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-5">
+                        <a href="#quiz" class="relative inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-2xl text-white bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 transition shadow-[0_10px_40px_-10px_rgba(79,70,229,0.5)] transform hover:-translate-y-1 overflow-hidden group">
+                            <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></span>
+                            Рассчитать стоимость
+                            <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                        <div class="flex items-center gap-3 px-4 py-2 bg-slate-800/30 rounded-xl border border-white/5 backdrop-blur-sm">
+                            <div class="flex -space-x-3">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-700" alt="Avatar">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka" class="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-700" alt="Avatar">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jude" class="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-700" alt="Avatar">
+                            </div>
+                            <div class="text-xs">
+                                <div class="text-white font-bold">Разбор сайта</div>
+                                <div class="text-indigo-400">в подарок 🎁</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Before/After Slider -->
+                <div class="relative h-[450px] w-full slider-container bg-slate-900 group" id="comparisonSlider">
+                    <!-- Reflection effect on top -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-50 pointer-events-none z-30"></div>
+                    
+                    <!-- The "After" Image (Background) -->
+                    <div class="slider-image mockup-good overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500/20 rounded-full blur-[80px]"></div>
+                        
+                        <div class="w-full h-14 flex justify-between items-center mb-10 border-b border-white/10 pb-2 relative z-10">
+                            <div class="font-bold text-2xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">BRAND.UI</div>
+                            <div class="bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold px-5 py-2.5 rounded-lg shadow-lg shadow-indigo-500/20 transition cursor-pointer">Заказать</div>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="inline-block px-3 py-1 bg-green-500/20 text-green-300 text-[10px] font-bold uppercase rounded mb-3">Результат</div>
+                            <div class="text-5xl font-black mb-4 text-white leading-tight">ВАШ ОФФЕР <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300">БЬЕТ В ЦЕЛЬ</span></div>
+                            <div class="text-slate-300 mb-8 text-sm w-3/4 leading-relaxed">Системный подход к дизайну, который конвертирует посетителей в лояльных клиентов.</div>
+                            
+                            <div class="flex gap-4">
+                                <div class="h-12 w-40 bg-indigo-600 rounded-lg shadow-lg flex items-center justify-center font-bold text-sm">Купить сейчас</div>
+                                <div class="h-12 w-12 border border-white/20 rounded-lg flex items-center justify-center bg-white/5 backdrop-blur text-green-400">
+                                    <i data-lucide="check" class="w-5 h-5"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Floating Stats Card inside Mockup -->
+                        <div class="absolute bottom-6 right-6 bg-slate-900/80 backdrop-blur-xl p-4 rounded-xl border border-white/10 shadow-2xl w-48 animate-float-delayed">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="text-xs text-slate-400">Конверсия</div>
+                                <i data-lucide="trending-up" class="w-4 h-4 text-green-400"></i>
+                            </div>
+                            <div class="text-2xl font-bold text-white">8.5%</div>
+                            <div class="w-full bg-slate-700 h-1 mt-2 rounded-full overflow-hidden">
+                                <div class="bg-green-500 h-full w-[85%]"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- The "Before" Image (Foreground, Resizable) -->
+                    <div class="slider-resizer" id="resizer">
+                        <div class="slider-image mockup-bad w-[800px]"> 
+                            <div class="w-full h-12 flex justify-between items-center mb-8 bg-white px-4 border-b border-slate-300 shadow-sm">
+                                <div class="text-sm text-black font-serif italic">Логотип фирмы</div>
+                                <div class="text-xs text-black">Тел: 8 (900) ...</div>
+                            </div>
+                            <div class="text-2xl font-serif text-black mb-4 text-center border-b pb-4 border-black">Мы - динамичная компания</div>
+                            <div class="text-black mb-6 text-xs text-justify leading-relaxed px-4">
+                                Наша компания была основана в 2010 году и с тех пор мы предоставляем качественные услуги на рынке. Мы ценим каждого клиента и индивидуальный подход. Наша миссия - делать мир лучше.
+                                (Много скучного текста без смысла...)
+                            </div>
+                            <div class="flex justify-center mb-10">
+                                <div class="h-8 w-32 bg-gray-500 rounded-none flex items-center justify-center text-xs text-white cursor-pointer hover:bg-gray-600">Подробнее >></div>
+                            </div>
+                            <div class="mt-auto mx-4 bg-red-100 p-3 border border-red-300 rounded shadow-sm opacity-90 transform rotate-1">
+                                <div class="text-xs text-red-800 font-bold flex items-center gap-2">
+                                    <i data-lucide="alert-triangle" class="w-4 h-4"></i> Нет заявок...
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slider-handle">
+                            <i data-lucide="chevrons-left-right" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <input type="range" min="0" max="100" value="50" class="absolute inset-0 w-full h-full opacity-0 cursor-col-resize z-30" id="sliderRange">
+                    
+                    <div class="absolute bottom-4 left-4 bg-slate-950/80 backdrop-blur px-3 py-1 rounded-lg text-xs font-bold text-slate-300 z-20 pointer-events-none border border-slate-700 shadow-xl">БЫЛО</div>
+                    <div class="absolute bottom-4 left-[52%] bg-indigo-600/90 backdrop-blur px-3 py-1 rounded-lg text-xs font-bold text-white z-20 pointer-events-none shadow-lg shadow-indigo-500/40">СТАЛО</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problems Section -->
+    <section id="problems" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-20">
+                <span class="text-indigo-400 text-sm font-bold tracking-widest uppercase mb-2 block">Анализ ситуации</span>
+                <h2 class="text-3xl md:text-5xl font-extrabold mb-6 text-white">Узнаете себя в этих ситуациях?</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto text-lg">Большинство клиентов приходят ко мне именно с этими болями. Результат всегда один — потеря денег.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Card 1 -->
+                <div class="glass-card p-8 rounded-3xl hover:bg-slate-800/60 transition duration-500 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-[50px] group-hover:bg-red-500/20 transition"></div>
+                    <div class="flex items-start gap-6 relative z-10">
+                        <div class="flex-shrink-0 w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center text-red-500 shadow-inner border border-slate-700 group-hover:scale-110 transition duration-300">
+                            <i data-lucide="trending-down" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-3 text-white">Бермудский треугольник бюджета</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-4">Клики есть, деньги списываются, а заявок — кот наплакал. Клиенты убегают через 3 секунды, не понимая, куда попали.</p>
+                            <div class="inline-flex items-center px-3 py-1 bg-red-500/10 rounded-lg text-xs text-red-300 font-mono border border-red-500/20">
+                                <span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-2 animate-pulse"></span> Диагноз: Нет оффера
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="glass-card p-8 rounded-3xl hover:bg-slate-800/60 transition duration-500 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-[50px] group-hover:bg-orange-500/20 transition"></div>
+                    <div class="flex items-start gap-6 relative z-10">
+                        <div class="flex-shrink-0 w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center text-orange-500 shadow-inner border border-slate-700 group-hover:scale-110 transition duration-300">
+                            <i data-lucide="ghost" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-3 text-white">Эксперт-невидимка</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-4">Стыдно скинуть ссылку на сайт. Дизайн из 2015 года, верстка едет, тексты устарели. Вы теряете премиальных клиентов.</p>
+                            <div class="inline-flex items-center px-3 py-1 bg-orange-500/10 rounded-lg text-xs text-orange-300 font-mono border border-orange-500/20">
+                                <span class="w-1.5 h-1.5 rounded-full bg-orange-500 mr-2 animate-pulse"></span> Диагноз: Имидж на нуле
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="glass-card p-8 rounded-3xl hover:bg-slate-800/60 transition duration-500 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 rounded-full blur-[50px] group-hover:bg-yellow-500/20 transition"></div>
+                    <div class="flex items-start gap-6 relative z-10">
+                        <div class="flex-shrink-0 w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center text-yellow-500 shadow-inner border border-slate-700 group-hover:scale-110 transition duration-300">
+                            <i data-lucide="hammer" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-3 text-white">Сам себе режиссер</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-4">Собрали сайт сами за выходные. Шрифты пляшут, мобилка кривая. Потратили неделю времени, которое стоит дороже.</p>
+                            <div class="inline-flex items-center px-3 py-1 bg-yellow-500/10 rounded-lg text-xs text-yellow-300 font-mono border border-yellow-500/20">
+                                <span class="w-1.5 h-1.5 rounded-full bg-yellow-500 mr-2 animate-pulse"></span> Диагноз: Потеря фокуса
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="glass-card p-8 rounded-3xl hover:bg-slate-800/60 transition duration-500 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-[50px] group-hover:bg-purple-500/20 transition"></div>
+                    <div class="flex items-start gap-6 relative z-10">
+                        <div class="flex-shrink-0 w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center text-purple-500 shadow-inner border border-slate-700 group-hover:scale-110 transition duration-300">
+                            <i data-lucide="users" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-3 text-white">Заявки есть, продаж нет</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-4">Приходят одни «халявщики», которые говорят «дорого» и исчезают. Сайт не фильтрует аудиторию.</p>
+                            <div class="inline-flex items-center px-3 py-1 bg-purple-500/10 rounded-lg text-xs text-purple-300 font-mono border border-purple-500/20">
+                                <span class="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2 animate-pulse"></span> Диагноз: Неверные смыслы
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution / USP -->
+    <section id="solution" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="lg:flex gap-20 items-center">
+                <div class="lg:w-1/2 mb-12 lg:mb-0">
+                    <h2 class="text-3xl md:text-5xl font-extrabold mb-8 text-white leading-tight">Я не делаю «просто сайты». <br>Я строю <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">системы продаж</span>.</h2>
+                    
+                    <div class="space-y-8">
+                        <div class="flex gap-6 group">
+                            <div class="flex-shrink-0 w-16 h-16 glass-card rounded-2xl flex items-center justify-center text-indigo-400 font-bold text-2xl group-hover:text-white group-hover:bg-indigo-600 transition duration-300 shadow-lg shadow-indigo-500/10">1</div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white group-hover:text-indigo-300 transition">Сначала маркетинг, потом дизайн</h4>
+                                <p class="text-slate-400 mt-3 leading-relaxed">70% работы — это аналитика и смыслы (копирайтинг), и только 30% — визуал. Я не открою редактор, пока не пойму вашего клиента.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6 group">
+                            <div class="flex-shrink-0 w-16 h-16 glass-card rounded-2xl flex items-center justify-center text-indigo-400 font-bold text-2xl group-hover:text-white group-hover:bg-indigo-600 transition duration-300 shadow-lg shadow-indigo-500/10">2</div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white group-hover:text-indigo-300 transition">Тексты, которые продают</h4>
+                                <p class="text-slate-400 mt-3 leading-relaxed">Вам не нужно писать тексты. Я вытаскиваю смыслы из вашей головы и превращаю их в убедительные заголовки.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6 group">
+                            <div class="flex-shrink-0 w-16 h-16 glass-card rounded-2xl flex items-center justify-center text-indigo-400 font-bold text-2xl group-hover:text-white group-hover:bg-indigo-600 transition duration-300 shadow-lg shadow-indigo-500/10">3</div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white group-hover:text-indigo-300 transition">Техническая безупречность</h4>
+                                <p class="text-slate-400 mt-3 leading-relaxed">Идеальная адаптация под мобильные (80% трафика), быстрая загрузка, интеграция с CRM.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 3D Iceberg Concept Visual -->
+                <div class="lg:w-1/2">
+                    <div class="glass-card rounded-3xl p-1 text-white relative shadow-2xl backdrop-blur-xl border border-indigo-500/30">
+                        <div class="absolute -top-10 -right-10 w-40 h-40 bg-purple-500 rounded-full blur-[80px] opacity-40"></div>
+                        <div class="bg-slate-900/80 rounded-[22px] p-8 overflow-hidden relative">
+                            
+                            <div class="text-center mb-6 relative z-10">
+                                <div class="text-xs font-bold tracking-[0.2em] uppercase text-indigo-400 mb-2">Принцип Айсберга</div>
+                                <h3 class="text-2xl font-bold text-white">Структура проекта</h3>
+                            </div>
+                            <!-- Visual Block -->
+                            <div class="relative z-10 space-y-2">
+                                <!-- Visible Part -->
+                                <div class="bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-xl p-6 text-center shadow-lg shadow-indigo-500/20 transform hover:-translate-y-1 transition duration-300 border border-indigo-400/30">
+                                    <div class="text-2xl font-bold text-white mb-1">Дизайн (UI)</div>
+                                    <div class="text-indigo-200 text-sm">То, что видит клиент (10%)</div>
+                                </div>
+                                <!-- Water Line -->
+                                <div class="flex items-center gap-4 py-2 opacity-50">
+                                    <div class="h-[1px] bg-indigo-300 flex-1"></div>
+                                    <div class="text-xs text-indigo-300 font-mono">WATER LINE</div>
+                                    <div class="h-[1px] bg-indigo-300 flex-1"></div>
+                                </div>
+                                <!-- Hidden Part -->
+                                <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-6 space-y-4 backdrop-blur-sm">
+                                    <div class="text-xs text-slate-400 text-center uppercase tracking-wider mb-2">Скрытая работа (90%)</div>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div class="bg-slate-900/80 p-3 rounded-lg flex items-center gap-2 text-sm text-slate-300 border border-white/5 hover:border-indigo-500/50 transition">
+                                            <i data-lucide="search" class="w-4 h-4 text-indigo-400"></i> Анализ ЦА
+                                        </div>
+                                        <div class="bg-slate-900/80 p-3 rounded-lg flex items-center gap-2 text-sm text-slate-300 border border-white/5 hover:border-indigo-500/50 transition">
+                                            <i data-lucide="file-text" class="w-4 h-4 text-indigo-400"></i> Смыслы
+                                        </div>
+                                        <div class="bg-slate-900/80 p-3 rounded-lg flex items-center gap-2 text-sm text-slate-300 border border-white/5 hover:border-indigo-500/50 transition">
+                                            <i data-lucide="pen-tool" class="w-4 h-4 text-indigo-400"></i> Копирайтинг
+                                        </div>
+                                        <div class="bg-slate-900/80 p-3 rounded-lg flex items-center gap-2 text-sm text-slate-300 border border-white/5 hover:border-indigo-500/50 transition">
+                                            <i data-lucide="code" class="w-4 h-4 text-indigo-400"></i> Код & SEO
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: PORTFOLIO -->
+    <section id="portfolio" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <span class="text-indigo-400 text-sm font-bold tracking-widest uppercase mb-2 block">Портфолио</span>
+                <h2 class="text-3xl md:text-5xl font-extrabold mb-4 text-white">Избранные проекты</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">Каждый сайт — это уникальная история, рассказанная языком маркетинга и дизайна.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="group relative rounded-2xl overflow-hidden glass-card hover:border-indigo-500/50 transition-all duration-300">
+                    <div class="aspect-video bg-slate-800 relative overflow-hidden">
+                        <!-- CSS Mockup -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-900 p-6 flex flex-col justify-center items-center group-hover:scale-105 transition duration-700">
+                            <div class="w-3/4 h-3/4 bg-slate-950 rounded-lg shadow-2xl border border-slate-700 overflow-hidden relative">
+                                <div class="bg-indigo-600 h-2 w-full"></div>
+                                <div class="p-4 space-y-2">
+                                    <div class="h-4 w-1/2 bg-slate-700 rounded"></div>
+                                    <div class="h-2 w-3/4 bg-slate-800 rounded"></div>
+                                    <div class="h-2 w-full bg-slate-800 rounded"></div>
+                                    <div class="mt-4 h-8 w-24 bg-indigo-500 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Overlay -->
+                        <div class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center backdrop-blur-sm">
+                            <button class="px-6 py-2 bg-white text-slate-900 rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition duration-300">Смотреть кейс</button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs text-indigo-400 font-bold mb-2 uppercase">Недвижимость</div>
+                        <h3 class="text-xl font-bold text-white mb-2">ЖК "Высота"</h3>
+                        <p class="text-slate-400 text-sm">Лендинг для продажи элитных квартир. Продано 80% лотов за 2 месяца.</p>
+                    </div>
+                </div>
+                <!-- Project 2 -->
+                <div class="group relative rounded-2xl overflow-hidden glass-card hover:border-indigo-500/50 transition-all duration-300">
+                    <div class="aspect-video bg-slate-800 relative overflow-hidden">
+                        <!-- CSS Mockup -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-purple-900 to-slate-900 p-6 flex flex-col justify-center items-center group-hover:scale-105 transition duration-700">
+                            <div class="w-3/4 h-3/4 bg-slate-950 rounded-lg shadow-2xl border border-slate-700 overflow-hidden relative flex">
+                                <div class="w-1/3 border-r border-slate-800 p-2 space-y-2">
+                                    <div class="h-2 w-full bg-slate-800 rounded"></div>
+                                    <div class="h-2 w-2/3 bg-slate-800 rounded"></div>
+                                </div>
+                                <div class="w-2/3 p-2">
+                                     <div class="h-16 w-full bg-purple-500/20 rounded mb-2"></div>
+                                     <div class="grid grid-cols-2 gap-2">
+                                         <div class="h-10 bg-slate-800 rounded"></div>
+                                         <div class="h-10 bg-slate-800 rounded"></div>
+                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                         <!-- Overlay -->
+                         <div class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center backdrop-blur-sm">
+                            <button class="px-6 py-2 bg-white text-slate-900 rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition duration-300">Смотреть кейс</button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs text-purple-400 font-bold mb-2 uppercase">E-commerce</div>
+                        <h3 class="text-xl font-bold text-white mb-2">Neon Store</h3>
+                        <p class="text-slate-400 text-sm">Интернет-магазин неоновых вывесок. Рост среднего чека на 40%.</p>
+                    </div>
+                </div>
+                <!-- Project 3 -->
+                <div class="group relative rounded-2xl overflow-hidden glass-card hover:border-indigo-500/50 transition-all duration-300">
+                    <div class="aspect-video bg-slate-800 relative overflow-hidden">
+                        <!-- CSS Mockup -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-900 to-slate-900 p-6 flex flex-col justify-center items-center group-hover:scale-105 transition duration-700">
+                            <div class="w-3/4 h-3/4 bg-slate-950 rounded-lg shadow-2xl border border-slate-700 overflow-hidden relative">
+                                <div class="absolute top-0 w-full h-8 bg-slate-800 flex items-center px-2 gap-1">
+                                    <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                                    <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                </div>
+                                <div class="mt-12 mx-auto w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xl">Ed</div>
+                                <div class="text-center mt-4 text-slate-500 text-xs">Online School</div>
+                            </div>
+                        </div>
+                         <!-- Overlay -->
+                         <div class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center backdrop-blur-sm">
+                            <button class="px-6 py-2 bg-white text-slate-900 rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition duration-300">Смотреть кейс</button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs text-blue-400 font-bold mb-2 uppercase">EdTech</div>
+                        <h3 class="text-xl font-bold text-white mb-2">Crypto Academy</h3>
+                        <p class="text-slate-400 text-sm">Платформа для онлайн-курсов. 5000+ регистраций на вебинар.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: REVIEWS -->
+    <section id="reviews" class="py-24 relative bg-slate-900/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-extrabold mb-4 text-white">Что говорят клиенты</h2>
+                <p class="text-slate-400">Реальные результаты бизнеса после внедрения моих решений.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Review 1 -->
+                <div class="glass-card p-8 rounded-3xl relative">
+                    <div class="absolute top-8 right-8 text-indigo-500/20">
+                        <i data-lucide="quote" class="w-12 h-12"></i>
+                    </div>
+                    <div class="flex items-center gap-4 mb-6">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Robert" alt="User" class="w-14 h-14 rounded-full border-2 border-indigo-500 bg-slate-800">
+                        <div>
+                            <div class="font-bold text-white">Алексей Смирнов</div>
+                            <div class="text-xs text-slate-400">CEO, СтройМастер</div>
+                        </div>
+                    </div>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-6">"До этого у нас был сайт на конструкторе, заявка стоила 1500р. После редизайна и проработки смыслов стоимость лида упала до 450р. Сайт окупился за неделю рекламы. Это магия!"</p>
+                    <div class="flex items-center gap-2 pt-6 border-t border-white/5">
+                        <div class="text-green-400 font-bold text-lg">+210%</div>
+                        <div class="text-xs text-slate-500 uppercase tracking-wide">Рост заявок</div>
+                    </div>
+                </div>
+                <!-- Review 2 -->
+                <div class="glass-card p-8 rounded-3xl relative">
+                    <div class="absolute top-8 right-8 text-indigo-500/20">
+                        <i data-lucide="quote" class="w-12 h-12"></i>
+                    </div>
+                    <div class="flex items-center gap-4 mb-6">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Julia" alt="User" class="w-14 h-14 rounded-full border-2 border-purple-500 bg-slate-800">
+                        <div>
+                            <div class="font-bold text-white">Марина Власова</div>
+                            <div class="text-xs text-slate-400">Основатель, Beauty School</div>
+                        </div>
+                    </div>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-6">"Мне было стыдно показывать свой старый сайт партнерам. Теперь я горжусь ссылкой в шапке профиля. Дизайн выглядит очень дорого, клиенты сразу воспринимают нас как премиум-бренд."</p>
+                    <div class="flex items-center gap-2 pt-6 border-t border-white/5">
+                        <div class="text-purple-400 font-bold text-lg">x3</div>
+                        <div class="text-xs text-slate-500 uppercase tracking-wide">Увеличение чека</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section id="quiz" class="py-24 relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="relative rounded-[32px] p-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 shadow-2xl shadow-indigo-500/20 animate-pulse-slow">
+                <div class="bg-slate-900 rounded-[30px] overflow-hidden relative">
+                    <!-- Header -->
+                    <div class="bg-slate-800/50 px-8 py-8 md:px-12 md:py-10 border-b border-white/5 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-10 opacity-10 transform rotate-12">
+                            <i data-lucide="calculator" class="w-32 h-32 text-indigo-400"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-2 text-white relative z-10">Рассчитайте стоимость</h3>
+                        <p class="text-indigo-200 text-base relative z-10">Ответьте на 4 вопроса и получите смету + чек-лист "10 ошибок сайта"</p>
+                    </div>
+                    
+                    <div class="p-8 md:p-12">
+                        <!-- Progress Bar -->
+                        <div class="w-full bg-slate-800 h-3 rounded-full mb-10 overflow-hidden border border-slate-700">
+                            <div id="progressBar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]" style="width: 25%"></div>
+                        </div>
+                        <form id="quizForm" onsubmit="submitForm(event);">
+                            <!-- Step 1 -->
+                            <div class="step active" id="step1">
+                                <h4 class="text-2xl font-bold text-white mb-8">1. Какая у вас ниша?</h4>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <label class="group relative flex items-center p-5 border border-slate-700 rounded-2xl cursor-pointer bg-slate-800/30 hover:bg-indigo-900/20 hover:border-indigo-500 transition-all duration-300">
+                                        <input type="radio" name="niche" value="service" class="peer sr-only" checked>
+                                        <div class="w-6 h-6 rounded-full border-2 border-slate-500 peer-checked:border-indigo-500 peer-checked:bg-indigo-500 flex items-center justify-center mr-4 transition">
+                                            <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                                        </div>
+                                        <span class="text-lg text-slate-300 peer-checked:text-white font-medium">Услуги</span>
+                                        <i data-lucide="briefcase" class="absolute right-5 text-slate-600 group-hover:text-indigo-400 transition"></i>
+                                    </label>
+                                    <label class="group relative flex items-center p-5 border border-slate-700 rounded-2xl cursor-pointer bg-slate-800/30 hover:bg-indigo-900/20 hover:border-indigo-500 transition-all duration-300">
+                                        <input type="radio" name="niche" value="ecommerce" class="peer sr-only">
+                                        <div class="w-6 h-6 rounded-full border-2 border-slate-500 peer-checked:border-indigo-500 peer-checked:bg-indigo-500 flex items-center justify-center mr-4 transition">
+                                            <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                                        </div>
+                                        <span class="text-lg text-slate-300 peer-checked:text-white font-medium">Товарный бизнес</span>
+                                        <i data-lucide="shopping-bag" class="absolute right-5 text-slate-600 group-hover:text-indigo-400 transition"></i>
+                                    </label>
+                                    <label class="group relative flex items-center p-5 border border-slate-700 rounded-2xl cursor-pointer bg-slate-800/30 hover:bg-indigo-900/20 hover:border-indigo-500 transition-all duration-300">
+                                        <input type="radio" name="niche" value="infobiz" class="peer sr-only">
+                                        <div class="w-6 h-6 rounded-full border-2 border-slate-500 peer-checked:border-indigo-500 peer-checked:bg-indigo-500 flex items-center justify-center mr-4 transition">
+                                            <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                                        </div>
+                                        <span class="text-lg text-slate-300 peer-checked:text-white font-medium">Инфобизнес</span>
+                                        <i data-lucide="graduation-cap" class="absolute right-5 text-slate-600 group-hover:text-indigo-400 transition"></i>
+                                    </label>
+                                    <label class="group relative flex items-center p-5 border border-slate-700 rounded-2xl cursor-pointer bg-slate-800/30 hover:bg-indigo-900/20 hover:border-indigo-500 transition-all duration-300">
+                                        <input type="radio" name="niche" value="b2b" class="peer sr-only">
+                                        <div class="w-6 h-6 rounded-full border-2 border-slate-500 peer-checked:border-indigo-500 peer-checked:bg-indigo-500 flex items-center justify-center mr-4 transition">
+                                            <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                                        </div>
+                                        <span class="text-lg text-slate-300 peer-checked:text-white font-medium">B2B производство</span>
+                                        <i data-lucide="factory" class="absolute right-5 text-slate-600 group-hover:text-indigo-400 transition"></i>
+                                    </label>
+                                </div>
+                                <div class="mt-10 flex justify-end">
+                                    <button type="button" onclick="nextStep(2)" class="px-8 py-4 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-500 transition flex items-center shadow-lg shadow-indigo-600/30 hover:-translate-y-1">Далее <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div class="step" id="step2">
+                                <h4 class="text-2xl font-bold text-white mb-8">2. Есть ли у вас сейчас сайт?</h4>
+                                <div class="space-y-4">
+                                    <label class="flex items-center p-5 border border-slate-700 rounded-2xl cursor-pointer bg-slate-800/30 hover:bg-slate-800 hover:border-indigo-500 transition group">
+                                        <input type="radio" name="site" value="no" class="peer sr-only">
+                                        <div class="w-6 h-6 rounded-full border-2 border-slate-500 peer-checked:border-indigo-500 peer-checked:bg-indigo-500 flex items-center justify-center mr-4 transition">
+                                            <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                                        </div>
+                                        <span class="text-lg text-slate-300 peer-checked:text-white">Нет, это мой первый запуск</span>
+                                    </label>
+                                    <label class="flex items-center p-5 border border-slate-700 rounded-2xl cursor-pointer bg-slate-800/30 hover:bg-slate-800 hover:border-indigo-500 transition group">
+                                        <input type="radio" name="site" value="yes_bad" class="peer sr-only">
+                                        <div class="w-6 h-6 rounded-full border-2 border-slate-500 peer-checked:border-indigo-500 peer-checked:bg-indigo-500 flex items-center justify-center mr-4 transition">
+                                            <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                                        </div>
+                                        <span class="text-lg text-slate-300 peer-checked:text-white">Есть, но он не приносит заявок</span>
+                                    </label>
+                                    <label class="flex items-center p-5 border border-slate-700 rounded-2xl cursor-pointer bg-slate-800/30 hover:bg-slate-800 hover:border-indigo-500 transition group">
+                                        <input type="radio" name="site" value="yes_redesign" class="peer sr-only">
+                                        <div class="w-6 h-6 rounded-full border-2 border-slate-500 peer-checked:border-indigo-500 peer-checked:bg-indigo-500 flex items-center justify-center mr-4 transition">
+                                            <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                                        </div>
+                                        <span class="text-lg text-slate-300 peer-checked:text-white">Есть, хочу сделать редизайн</span>
+                                    </label>
+                                </div>
+                                <div class="mt-10 flex justify-between">
+                                    <button type="button" onclick="nextStep(1)" class="px-6 py-3 text-slate-400 hover:text-white font-bold transition">Назад</button>
+                                    <button type="button" onclick="nextStep(3)" class="px-8 py-4 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-500 transition flex items-center shadow-lg shadow-indigo-600/30">Далее <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Step 3 -->
+                            <div class="step" id="step3">
+                                <h4 class="text-2xl font-bold text-white mb-8">3. Когда планируете запуск?</h4>
+                                <div class="space-y-4">
+                                    <label class="flex items-center p-5 border border-slate-700 rounded-2xl cursor-pointer bg-slate-800/30 hover:bg-slate-800 hover:border-indigo-500 transition group">
+                                        <input type="radio" name="time" value="asap" class="peer sr-only">
+                                        <div class="w-6 h-6 rounded-full border-2 border-slate-500 peer-checked:border-indigo-500 peer-checked:bg-indigo-500 flex items-center justify-center mr-4 transition">
+                                            <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                                        </div>
+                                        <span class="text-lg text-slate-300 peer-checked:text-white">Вчера (срочно)</span>
+                                    </label>
+                                    <label class="flex items-center p-5 border border-slate-700 rounded-2xl cursor-pointer bg-slate-800/30 hover:bg-slate-800 hover:border-indigo-500 transition group">
+                                        <input type="radio" name="time" value="month" class="peer sr-only">
+                                        <div class="w-6 h-6 rounded-full border-2 border-slate-500 peer-checked:border-indigo-500 peer-checked:bg-indigo-500 flex items-center justify-center mr-4 transition">
+                                            <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                                        </div>
+                                        <span class="text-lg text-slate-300 peer-checked:text-white">В течение месяца</span>
+                                    </label>
+                                    <label class="flex items-center p-5 border border-slate-700 rounded-2xl cursor-pointer bg-slate-800/30 hover:bg-slate-800 hover:border-indigo-500 transition group">
+                                        <input type="radio" name="time" value="later" class="peer sr-only">
+                                        <div class="w-6 h-6 rounded-full border-2 border-slate-500 peer-checked:border-indigo-500 peer-checked:bg-indigo-500 flex items-center justify-center mr-4 transition">
+                                            <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                                        </div>
+                                        <span class="text-lg text-slate-300 peer-checked:text-white">Просто прицениваюсь</span>
+                                    </label>
+                                </div>
+                                <div class="mt-10 flex justify-between">
+                                    <button type="button" onclick="nextStep(2)" class="px-6 py-3 text-slate-400 hover:text-white font-bold transition">Назад</button>
+                                    <button type="button" onclick="nextStep(4)" class="px-8 py-4 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-500 transition flex items-center shadow-lg shadow-indigo-600/30">Далее <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Step 4 (Final) -->
+                            <div class="step" id="step4">
+                                <div class="text-center mb-8">
+                                    <div class="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 text-green-400 border border-green-500/20 shadow-[0_0_20px_rgba(74,222,128,0.2)]">
+                                        <i data-lucide="check" class="w-10 h-10"></i>
+                                    </div>
+                                    <h4 class="text-2xl font-bold text-white mb-2">Отлично! Последний шаг.</h4>
+                                    <p class="text-slate-400">Куда отправить расчет стоимости и PDF-разбор?</p>
+                                </div>
+                                
+                                <div class="space-y-5 max-w-sm mx-auto">
+                                    <div class="relative">
+                                        <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5"></i>
+                                        <input type="text" required placeholder="Ваше Имя" class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition">
+                                    </div>
+                                    <div class="relative">
+                                        <i data-lucide="smartphone" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5"></i>
+                                        <input type="tel" required placeholder="Телефон / WhatsApp" class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition">
+                                    </div>
+                                    <button type="submit" class="w-full px-6 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-xl font-bold hover:from-indigo-500 hover:to-indigo-400 transition shadow-[0_0_20px_rgba(99,102,241,0.4)] transform hover:-translate-y-1">
+                                        Получить смету
+                                    </button>
+                                    <p class="text-xs text-center text-slate-500">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.</p>
+                                </div>
+                                <div class="mt-8 flex justify-center">
+                                    <button type="button" onclick="nextStep(3)" class="text-sm text-slate-500 hover:text-white transition underline decoration-dashed">Назад</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-24 relative overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-indigo-900/20 rounded-[100%] blur-[120px] pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-extrabold mb-4 text-white">Прозрачные форматы</h2>
+                <p class="text-slate-400">Оплата поэтапная: 50% предоплата, 50% перед версткой.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 items-center">
+                
+                <!-- Tariff 1 -->
+                <div class="glass-card rounded-3xl p-8 hover:border-indigo-500/50 transition duration-300 group">
+                    <h3 class="text-xl font-bold mb-2 text-white">Быстрый Запуск</h3>
+                    <p class="text-slate-400 text-sm mb-6 h-10">Для тех, кому нужно проверить гипотезу или запустить трафик.</p>
+                    <div class="text-3xl font-bold mb-6 text-white">от 25 000 ₽</div>
+                    <ul class="space-y-3 mb-8 text-sm text-slate-300">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-400"></i> Анализ конкурентов</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-400"></i> Сборка на шаблоне</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-400"></i> Базовые тексты</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-400"></i> Адаптив под мобильные</li>
+                        <li class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4 text-slate-500"></i> Срок: 3-5 дней</li>
+                    </ul>
+                    <a href="#quiz" class="block w-full py-3 border border-slate-600 rounded-xl text-center font-bold text-white hover:bg-slate-700 hover:border-slate-500 transition">Выбрать тариф</a>
+                </div>
+                <!-- Tariff 2 (Featured) -->
+                <div class="relative bg-slate-900/80 rounded-3xl p-8 border-2 border-indigo-500 transform md:scale-105 shadow-[0_0_40px_-10px_rgba(79,70,229,0.3)] backdrop-blur-xl z-10">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">ХИТ ПРОДАЖ</div>
+                    <h3 class="text-2xl font-bold mb-2 text-white">Конверсионная Машина</h3>
+                    <p class="text-indigo-200 text-sm mb-6 h-10">Полноценная упаковка. Индивидуальный дизайн и смыслы.</p>
+                    <div class="text-4xl font-bold mb-6 text-white">от 50 000 ₽</div>
+                    <ul class="space-y-4 mb-8 text-sm text-white">
+                        <li class="flex items-center gap-2"><div class="p-1 bg-indigo-500/20 rounded-full"><i data-lucide="check" class="w-3 h-3 text-indigo-300"></i></div> <strong>Глубокий анализ ЦА</strong></li>
+                        <li class="flex items-center gap-2"><div class="p-1 bg-indigo-500/20 rounded-full"><i data-lucide="check" class="w-3 h-3 text-indigo-300"></i></div> <strong>Уникальный дизайн (Zero Block)</strong></li>
+                        <li class="flex items-center gap-2"><div class="p-1 bg-indigo-500/20 rounded-full"><i data-lucide="check" class="w-3 h-3 text-indigo-300"></i></div> <strong>UX-Копирайтинг</strong></li>
+                        <li class="flex items-center gap-2"><div class="p-1 bg-indigo-500/20 rounded-full"><i data-lucide="check" class="w-3 h-3 text-indigo-300"></i></div> Сложная анимация</li>
+                        <li class="flex items-center gap-2"><div class="p-1 bg-indigo-500/20 rounded-full"><i data-lucide="check" class="w-3 h-3 text-indigo-300"></i></div> Интеграция с CRM</li>
+                    </ul>
+                    <a href="#quiz" class="block w-full py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 rounded-xl text-center font-bold hover:from-indigo-500 hover:to-indigo-400 transition shadow-lg text-white">Обсудить проект</a>
+                </div>
+                <!-- Tariff 3 -->
+                <div class="glass-card rounded-3xl p-8 hover:border-indigo-500/50 transition duration-300 group">
+                    <h3 class="text-xl font-bold mb-2 text-white">Бизнес-Связка</h3>
+                    <p class="text-slate-400 text-sm mb-6 h-10">Сайт + Трафик. Клиенты под ключ.</p>
+                    <div class="text-3xl font-bold mb-6 text-white">от 90 000 ₽</div>
+                    <ul class="space-y-3 mb-8 text-sm text-slate-300">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-400"></i> Всё из тарифа «Машина»</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-400"></i> Разработка Лид-магнита</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-400"></i> Настройка Яндекс.Директ</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-400"></i> Автоворонка / Чат-бот</li>
+                        <li class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4 text-slate-500"></i> Срок: 20+ дней</li>
+                    </ul>
+                    <a href="#quiz" class="block w-full py-3 border border-slate-600 rounded-xl text-center font-bold text-white hover:bg-slate-700 hover:border-slate-500 transition">Заказать комплекс</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-white/5 py-12 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h2 class="text-2xl font-bold text-white mb-4">Остались сомнения?</h2>
+            <p class="text-slate-400 mb-8 max-w-lg mx-auto">Созвонимся на 15 минут, я посмотрю вашу ситуацию и честно скажу — нужен вам лендинг сейчас или лучше начать с другого инструмента.</p>
+            
+            <div class="flex justify-center gap-4 mb-8">
+                <a href="https://t.me/your_telegram" target="_blank" class="flex items-center gap-2 px-6 py-3 bg-[#0088cc] text-white rounded-full font-bold hover:bg-[#0077b5] transition shadow-lg shadow-blue-500/20">
+                    <i data-lucide="send" class="w-4 h-4"></i> Telegram
+                </a>
+                <a href="https://wa.me/79000000000" target="_blank" class="flex items-center gap-2 px-6 py-3 bg-[#25D366] text-white rounded-full font-bold hover:bg-[#20bd5a] transition shadow-lg shadow-green-500/20">
+                    <i data-lucide="phone" class="w-4 h-4"></i> WhatsApp
+                </a>
+            </div>
+            
+            <div class="text-sm text-slate-500">
+                &copy; 2023 WebExpert. Все права защищены. <br>
+                Политика конфиденциальности
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('open');
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+            });
+        });
+
+        // Slider Logic
+        const slider = document.getElementById('sliderRange');
+        const resizer = document.getElementById('resizer');
+        
+        // Initial state update
+        if(slider && resizer) {
+             resizer.style.width = '50%';
+        }
+        if(slider) {
+            slider.addEventListener('input', (e) => {
+                resizer.style.width = e.target.value + '%';
+            });
+        }
+
+        // Quiz Logic
+        function nextStep(stepNumber) {
+            // Hide all steps
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            // Show target step
+            const target = document.getElementById('step' + stepNumber);
+            if(target) target.classList.add('active');
+            
+            // Update Progress Bar
+            const progress = stepNumber * 25;
+            const bar = document.getElementById('progressBar');
+            if(bar) bar.style.width = progress + '%';
+        }
+
+        // Form Submission Logic
+        function submitForm(event) {
+            event.preventDefault();
+            // Here you would typically send the data to a server
+            alert("Спасибо! Ваша заявка принята. Мы свяжемся с вами в ближайшее время.");
+            
+            // Reset form
+            event.target.reset();
+            nextStep(1); // Go back to step 1 or maybe show a success step
+        }
+    </script>
+</body>
+</html>
